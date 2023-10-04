@@ -5,13 +5,25 @@ type InputFieldProps = {
   id: string;
   label: string;
   name: string;
-  value: string;
-  error: string;
+  value: string | number;
+  error?: string;
+  type: 'number' | 'text' | 'email';
+  disabled?: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const InputField = ({ id, name, label, value, error, onChange }: InputFieldProps) => (
+const InputField = ({
+  id,
+  name,
+  label,
+  value,
+  type,
+  disabled,
+  error,
+  onChange,
+}: InputFieldProps) => (
   <TextField
+    type={type}
     size='small'
     fullWidth={true}
     name={name}
@@ -20,6 +32,7 @@ const InputField = ({ id, name, label, value, error, onChange }: InputFieldProps
     value={value}
     error={Boolean(error)}
     helperText={error}
+    disabled={disabled}
     onChange={onChange}
   />
 );

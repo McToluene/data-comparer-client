@@ -10,6 +10,7 @@ describe('InputField', () => {
     label: 'Test Label',
     value: '',
     error: '',
+    type: 'text' as const, // Specify the type here
     onChange: jest.fn(),
   };
 
@@ -24,6 +25,7 @@ describe('InputField', () => {
     expect(textField).toBeInTheDocument();
     expect(textField).toHaveAttribute('id', 'test-id');
     expect(textField).toHaveValue('');
+    expect(textField).toHaveAttribute('type', 'text'); // Check the type attribute
   });
 
   it('calls the onChange function when input changes', () => {

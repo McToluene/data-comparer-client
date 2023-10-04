@@ -9,6 +9,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
+import Role from '../../enum/role.enum';
 
 const schema = yup.object().shape({
   email: yup.string().required('Email is required').email('Invalid email format'),
@@ -66,8 +67,10 @@ export default function Login() {
 
         const response = await request.json();
         login(response.data);
+        localStorage.setItem('user', response.data);
         setIsLoading((isLoading) => !isLoading);
-        navigate('/dashboard');
+        if (response.data.role === Role.USER) navigate('/dashboard/form');
+        if (response.data.role === Role.ADMIN) navigate('/dashboard/company-table');
       }
       setIsLoading((isLoading) => !isLoading);
     } catch (error) {
@@ -96,6 +99,7 @@ export default function Login() {
           <InputField
             label='Email'
             name='email'
+            type='email'
             id='email'
             value={form.email}
             onChange={handleInputChange}

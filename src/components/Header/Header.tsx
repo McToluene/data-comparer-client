@@ -23,7 +23,7 @@ const drawerWidth = 240;
 const navItems = [{ name: 'Form', role: Role.USER }];
 
 export default function DrawerAppBar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -34,6 +34,7 @@ export default function DrawerAppBar() {
   if (!user) {
     return <Navigate to='/' replace />;
   }
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant='h6' sx={{ my: 2 }}>
@@ -50,6 +51,11 @@ export default function DrawerAppBar() {
             </ListItem>
           ) : null
         )}
+        <ListItem disablePadding>
+          <ListItemButton onClick={logout} sx={{ textAlign: 'center' }}>
+            <ListItemText primary='Logout' />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -76,11 +82,16 @@ export default function DrawerAppBar() {
             Data Comparer
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item.name} sx={{ color: '#fff' }}>
-                {item.name}
-              </Button>
-            ))}
+            {navItems.map((item) =>
+              item.role === user.role ? (
+                <Button key={item.name} sx={{ color: '#fff' }}>
+                  {item.name}
+                </Button>
+              ) : null
+            )}
+            <Button onClick={logout} sx={{ color: '#fff' }}>
+              Logout
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

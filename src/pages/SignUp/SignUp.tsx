@@ -52,7 +52,6 @@ export default function SignUp() {
 
   const firebasRegister = async (email: string, password: string) => {
     try {
-      console.log(email, password);
       setIsLoading((isLoading) => !isLoading);
       const result = await createUserWithEmailAndPassword(auth, email, password);
       const token = await result.user.getIdToken();
@@ -103,6 +102,7 @@ export default function SignUp() {
             label='Email'
             name='email'
             id='email-sign-up'
+            type='email'
             value={form.email}
             onChange={handleInputChange}
             error={errors.email}
