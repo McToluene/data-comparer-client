@@ -11,7 +11,7 @@ import ProtectedRoute from './ProtectedRoute';
 function App() {
   const { isAuthenticated } = useAuth();
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth='md'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login />} />

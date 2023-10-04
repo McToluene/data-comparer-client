@@ -20,7 +20,10 @@ import Role from '../../enum/role.enum';
 import { Navigate } from 'react-router-dom';
 
 const drawerWidth = 240;
-const navItems = [{ name: 'Form', role: Role.USER }];
+const navItems = [
+  { name: 'Form', role: Role.USER },
+  { name: 'Companies', role: Role.ADMIN },
+];
 
 export default function DrawerAppBar() {
   const { user, logout } = useAuth();

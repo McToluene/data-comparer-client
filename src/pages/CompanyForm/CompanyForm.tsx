@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import InputField from '../../components/InputField/InputField';
 import { useAuth } from '../../AuthContext';
 
@@ -104,82 +104,88 @@ function CompanyForm() {
   }
 
   return (
-    <Fragment>
-      <Grid container justifyContent='center' alignItems='center' height='100vh'>
-        <Grid xs={8} md={6} lg={8}>
-          <Typography variant='h5' component='h5'>
-            Company Information
-          </Typography>
-          <Box
-            component='form'
-            sx={{
-              '& .MuiTextField-root': { m: 1.5 },
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-            noValidate
-            autoComplete='off'
-            onSubmit={onSubmit}
+    <Grid container justifyContent='center' alignItems='center' height='100vh'>
+      <Grid item xs={8} md={6} lg={8}>
+        <Typography variant='h5' component='h5'>
+          Company Information
+        </Typography>
+        <Box
+          component='form'
+          sx={{
+            '& .MuiTextField-root': { m: 1.5 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+          noValidate
+          autoComplete='off'
+          onSubmit={onSubmit}
+        >
+          <InputField
+            label='Name'
+            name='name'
+            id='name'
+            type='text'
+            value={form.name}
+            onChange={handleInputChange}
+            error={errors.name}
+            disabled={!!company.name}
+          />
+
+          <InputField
+            label='Users'
+            name='users'
+            id='users'
+            type='number'
+            value={form.users}
+            onChange={handleInputChange}
+            error={errors.users}
+            disabled={!!company.users}
+          />
+
+          <InputField
+            label='Products'
+            name='products'
+            id='products'
+            type='number'
+            value={form.products}
+            onChange={handleInputChange}
+            error={errors.products}
+            disabled={!!company.products}
+          />
+
+          <InputField
+            label='Percentage'
+            name='percentage'
+            id='percentage'
+            value={form.percentage}
+            type='number'
+            onChange={handleInputChange}
+            error={errors.percentage}
+            disabled={!!company.percentage}
+          />
+
+          {company.imageURL ? (
+            <img
+              src={company.imageURL}
+              alt={company.name}
+              style={{ width: '150px', height: '100px' }}
+            />
+          ) : null}
+
+          <Button
+            size='medium'
+            fullWidth={true}
+            type='submit'
+            variant='contained'
+            color='primary'
+            disabled={hasCompany || isLoading}
           >
-            <InputField
-              label='Name'
-              name='name'
-              id='name'
-              type='text'
-              value={form.name}
-              onChange={handleInputChange}
-              error={errors.name}
-              disabled={company.name ? true : false}
-            />
-
-            <InputField
-              label='Users'
-              name='users'
-              id='users'
-              type='number'
-              value={form.users}
-              onChange={handleInputChange}
-              error={errors.users}
-              disabled={company.users ? true : false}
-            />
-
-            <InputField
-              label='Products'
-              name='products'
-              id='products'
-              type='number'
-              value={form.products}
-              onChange={handleInputChange}
-              error={errors.products}
-              disabled={company.products ? true : false}
-            />
-
-            <InputField
-              label='Percentage'
-              name='percentage'
-              id='percentage'
-              value={form.percentage}
-              type='number'
-              onChange={handleInputChange}
-              error={errors.percentage}
-              disabled={company.percentage ? true : false}
-            />
-
-            <Button
-              size='medium'
-              fullWidth={true}
-              type='submit'
-              variant='contained'
-              color='primary'
-              disabled={hasCompany || isLoading}
-            >
-              {isLoading ? 'Saving...' : 'Save'}
-            </Button>
-          </Box>
-        </Grid>
+            {isLoading ? 'Saving...' : 'Save'}
+          </Button>
+        </Box>
       </Grid>
-    </Fragment>
+    </Grid>
   );
 }
 
