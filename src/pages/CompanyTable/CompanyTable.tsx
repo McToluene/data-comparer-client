@@ -13,12 +13,14 @@ import {
 } from '@mui/material';
 import { useAuth } from '../../AuthContext';
 import ResponsiveDialog from '../../components/Dialog/Diaglog';
+import ComparisonDialog from '../../components/ComparisonDialog/ComparisonDialog';
 
 function CompanyTable() {
   const [open, setOpen] = useState(false);
   const { companies, companiesInfo } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState(null); // State to track the selected company
+  const [showComparison, setShowComparison] = useState(false); // State to control the visibility of CompanyComparison
 
   useEffect(() => {
     if (companies.length <= 0) {
@@ -54,6 +56,14 @@ function CompanyTable() {
   const handleClose = () => {
     setSelectedCompany(null);
     setOpen(false);
+  };
+
+  const handleCompareClose = () => {
+    setShowComparison(false);
+  };
+
+  const handleCompareClick = () => {
+    setShowComparison(true);
   };
 
   return (
@@ -101,12 +111,20 @@ function CompanyTable() {
           variant='contained'
           color='primary'
           disabled={companies.length <= 1 || isLoading}
+          onClick={handleCompareClick}
         >
           {isLoading ? 'Comparing...' : 'Compare'}
         </Button>
       </Grid>
       {selectedCompany && (
         <ResponsiveDialog company={selectedCompany} open={open} handleClose={handleClose} />
+      )}
+      {showComparison && (
+        <ComparisonDialog
+          open={showComparison}
+          handleClose={handleCompareClose}
+          companies={companies ? companies : []}
+        />
       )}
     </Grid>
   );

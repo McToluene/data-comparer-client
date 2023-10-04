@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Company, useAuth } from '../../AuthContext';
+import { useState } from 'react';
 
 type ResponsiveDialogProps = {
   company: Company;
@@ -17,6 +18,7 @@ type ResponsiveDialogProps = {
 
 export default function ResponsiveDialog({ company, open, handleClose }: ResponsiveDialogProps) {
   const { companyInfo } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xl'));
 
@@ -39,6 +41,7 @@ export default function ResponsiveDialog({ company, open, handleClose }: Respons
     formData.append('companyId', company.id.toString());
 
     try {
+      setIsLoading(true);
       const apiUrl = process.env.REACT_APP_SERVER_BASE_URL + 'company/image';
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -55,8 +58,10 @@ export default function ResponsiveDialog({ company, open, handleClose }: Respons
       } else {
         console.error('Image upload failed');
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error uploading image:', error);
+      setIsLoading(false);
     }
   };
 
@@ -86,22 +91,23 @@ export default function ResponsiveDialog({ company, open, handleClose }: Respons
             {image && (
               <div>
                 <p>Preview:</p>
-                <img src={URL.createObjectURL(image)} alt='Preview' style={{ maxWidth: '100%' }} />
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt='Preview'
+                  style={{ width: '200px', height: '150px' }}
+                />
               </div>
             )}
 
-            <Button color='primary' onClick={handleImageUpload}>
-              Upload Image
+            <Button color='primary' onClick={handleImageUpload} disabled={isLoading}>
+              {isLoading ? 'Saving.Image..' : ' Upload Image'}
             </Button>
           </div>
         )}
       </DialogContent>
       <DialogActions>
-        <Button color='error' autoFocus onClick={handleClose}>
-          Cancel
-        </Button>
         <Button onClick={handleClose} autoFocus>
-          Agree
+          Ok
         </Button>
       </DialogActions>
     </Dialog>
