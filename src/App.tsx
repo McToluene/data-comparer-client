@@ -32,7 +32,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/sign-up' element={<SignUp />} />
+        {/* <Route path='/sign-up' element={<SignUp />} /> */}
         <Route
           path='/dashboard/*'
           element={

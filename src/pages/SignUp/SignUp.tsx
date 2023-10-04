@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -81,54 +81,56 @@ export default function SignUp() {
   };
 
   return (
-    <Grid container justifyContent='center' alignItems='center' height='100vh'>
-      <Grid xs={8} md={6} lg={8}>
-        <Typography variant='h5' component='h5'>
-          Sign up
-        </Typography>
-        <Box
-          component='form'
-          sx={{
-            '& .MuiTextField-root': { m: 1.5 },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-          noValidate
-          autoComplete='off'
-          onSubmit={onSubmit}
-        >
-          <InputField
-            label='Email'
-            name='email'
-            id='email-sign-up'
-            type='email'
-            value={form.email}
-            onChange={handleInputChange}
-            error={errors.email}
-          />
-          <PasswordField
-            label='Password'
-            name='password'
-            id='password-sign-up'
-            value={form.password}
-            onChange={handleInputChange}
-            showPassword={showPassword}
-            handleClickShowPassword={handleClickShowPassword}
-            error={errors.password}
-          />
-          <Button
-            size='medium'
-            fullWidth={true}
-            type='submit'
-            variant='contained'
-            color='primary'
-            disabled={isLoading}
+    <Container maxWidth='sm'>
+      <Grid container justifyContent='center' alignItems='center' height='100vh'>
+        <Grid xs={8} md={6} lg={8}>
+          <Typography variant='h5' component='h5'>
+            Sign up
+          </Typography>
+          <Box
+            component='form'
+            sx={{
+              '& .MuiTextField-root': { m: 1.5 },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            noValidate
+            autoComplete='off'
+            onSubmit={onSubmit}
           >
-            {isLoading ? 'Logging In...' : 'Log In'}
-          </Button>
-        </Box>
+            <InputField
+              label='Email'
+              name='email'
+              id='email-sign-up'
+              type='email'
+              value={form.email}
+              onChange={handleInputChange}
+              error={errors.email}
+            />
+            <PasswordField
+              label='Password'
+              name='password'
+              id='password-sign-up'
+              value={form.password}
+              onChange={handleInputChange}
+              showPassword={showPassword}
+              handleClickShowPassword={handleClickShowPassword}
+              error={errors.password}
+            />
+            <Button
+              size='medium'
+              fullWidth={true}
+              type='submit'
+              variant='contained'
+              color='primary'
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging In...' : 'Log In'}
+            </Button>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   );
 }
