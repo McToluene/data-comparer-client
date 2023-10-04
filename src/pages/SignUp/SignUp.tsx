@@ -59,7 +59,8 @@ export default function SignUp() {
         localStorage.setItem('token', token);
         const requestData = {};
 
-        const request = await fetch('http://localhost:8080/api/user', {
+        const apiUrl = process.env.REACT_APP_SERVER_BASE_URL + 'user';
+        const request = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

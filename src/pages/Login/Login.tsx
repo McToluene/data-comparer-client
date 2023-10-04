@@ -59,7 +59,8 @@ export default function Login() {
 
       if (token) {
         localStorage.setItem('token', token);
-        const request = await fetch('http://localhost:8080/api/user', {
+        const apiUrl = process.env.REACT_APP_SERVER_BASE_URL + 'user';
+        const request = await fetch(apiUrl, {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
