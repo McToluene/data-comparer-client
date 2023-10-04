@@ -100,7 +100,7 @@ export default function ResponsiveDialog({ company, open, handleClose }: Respons
             )}
 
             <Button color='primary' onClick={handleImageUpload} disabled={isLoading}>
-              {isLoading ? 'Saving.Image..' : ' Upload Image'}
+              {isLoading ? 'Saving Image..' : ' Upload Image'}
             </Button>
           </div>
         )}
