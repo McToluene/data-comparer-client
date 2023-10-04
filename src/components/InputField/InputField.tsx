@@ -9,7 +9,7 @@ type InputFieldProps = {
   error?: string;
   type: 'number' | 'text' | 'email';
   disabled?: boolean;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const InputField = ({

@@ -88,6 +88,24 @@ function CompanyForm() {
     const { name, value } = event.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     setErrors((prevError) => ({ ...prevError, [name]: '' }));
+
+    if (name === 'users' || name === 'products') {
+      setTimeout(() => {
+        calculatePercentage();
+      }, 0);
+    }
+  };
+
+  const calculatePercentage = () => {
+    if (form.users > 0 && form.products > 0) {
+      console.log(form.users, form.products);
+      const calculatedPercentage = (form.users / form.products) * 100;
+      setForm((prevForm) => ({ ...prevForm, percentage: calculatedPercentage }));
+    } else {
+      console.log('else');
+      console.log(form.users, form.products);
+      setForm((prevForm) => ({ ...prevForm, percentage: 0 }));
+    }
   };
 
   async function createCompany(form: any) {
@@ -106,6 +124,7 @@ function CompanyForm() {
       const response = await request.json();
       if (response.data) {
         companyInfo(response.data);
+        setIsSuccessful(true);
       }
       setIsLoading((isLoading) => !isLoading);
     } catch (error) {
@@ -171,9 +190,8 @@ function CompanyForm() {
             id='percentage'
             value={form.percentage}
             type='number'
-            onChange={handleInputChange}
             error={errors.percentage}
-            disabled={!!company.percentage}
+            disabled={true}
           />
 
           {company.imageURL ? (
