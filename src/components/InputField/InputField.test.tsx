@@ -1,0 +1,37 @@
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import InputField from './InputField';
+
+describe('InputField', () => {
+  const defaultProps = {
+    id: 'test-id',
+    name: 'test-name',
+    label: 'Test Label',
+    value: '',
+    error: '',
+    onChange: jest.fn(),
+  };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders correctly with default props', () => {
+    render(<InputField {...defaultProps} />);
+    const textField = screen.getByLabelText('Test Label');
+
+    expect(textField).toBeInTheDocument();
+    expect(textField).toHaveAttribute('id', 'test-id');
+    expect(textField).toHaveValue('');
+  });
+
+  it('calls the onChange function when input changes', () => {
+    render(<InputField {...defaultProps} />);
+    const textField = screen.getByLabelText('Test Label');
+    fireEvent.change(textField, { target: { value: 'new-value' } });
+
+    expect(defaultProps.onChange).toHaveBeenCalledTimes(1);
+    expect(defaultProps.onChange).toHaveBeenCalledWith(expect.anything());
+  });
+});
