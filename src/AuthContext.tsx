@@ -19,6 +19,8 @@ interface AuthContextData {
   companies: Company[];
   login: (data: any) => void;
   logout: () => void;
+  error: string;
+  updateError: (data: string) => void;
 }
 
 const AuthContext = createContext<AuthContextData>({
@@ -31,10 +33,13 @@ const AuthContext = createContext<AuthContextData>({
   companies: [],
   login: (data: any) => {},
   logout: () => {},
+  error: '',
+  updateError: (data: string) => {},
 });
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState({ role: '' });
+  const [error, setError] = useState('');
   const [company, setCompany] = useState({
     id: 0,
     name: '',
@@ -68,6 +73,10 @@ export const AuthProvider = ({ children }: any) => {
     setHasCompany(false);
   };
 
+  const updateError = (message: string) => {
+    setError(message);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -80,6 +89,8 @@ export const AuthProvider = ({ children }: any) => {
         companiesInfo,
         login,
         logout,
+        error,
+        updateError,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import Grid from '@mui/material/Unstable_Grid2';
 import InputField from '../../components/InputField/InputField';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import PasswordField from '../../components/PasswordField/PasswordField';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -20,7 +20,7 @@ const schema = yup.object().shape({
 });
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, updateError } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
@@ -73,60 +73,63 @@ export default function Login() {
         if (response.data.role === Role.ADMIN) navigate('/dashboard/company-table');
       }
       setIsLoading((isLoading) => !isLoading);
-    } catch (error) {
+    } catch (error: any) {
+      updateError(error?.message);
       setIsLoading((isLoading) => !isLoading);
     }
   }
 
   return (
-    <Grid container justifyContent='center' alignItems='center' height='100vh'>
-      <Grid xs={8} md={6} lg={8}>
-        <Typography variant='h5' component='h5'>
-          Login
-        </Typography>
-        <Box
-          component='form'
-          sx={{
-            '& .MuiTextField-root': { m: 1.5 },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-          noValidate
-          autoComplete='off'
-          onSubmit={onSubmit}
-        >
-          <InputField
-            label='Email'
-            name='email'
-            type='email'
-            id='email'
-            value={form.email}
-            onChange={handleInputChange}
-            error={errors.email}
-          />
-          <PasswordField
-            label='Password'
-            name='password'
-            id='password'
-            value={form.password}
-            onChange={handleInputChange}
-            showPassword={showPassword}
-            handleClickShowPassword={handleClickShowPassword}
-            error={errors.password}
-          />
-          <Button
-            size='medium'
-            fullWidth={true}
-            type='submit'
-            variant='contained'
-            color='primary'
-            disabled={isLoading}
+    <Container maxWidth='sm'>
+      <Grid container justifyContent='center' alignItems='center' height='100vh'>
+        <Grid xs={8} md={6} lg={8}>
+          <Typography variant='h5' component='h5'>
+            Login
+          </Typography>
+          <Box
+            component='form'
+            sx={{
+              '& .MuiTextField-root': { m: 1.5 },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            noValidate
+            autoComplete='off'
+            onSubmit={onSubmit}
           >
-            {isLoading ? 'Logging In...' : 'Log In'}
-          </Button>
-        </Box>
+            <InputField
+              label='Email'
+              name='email'
+              type='email'
+              id='email'
+              value={form.email}
+              onChange={handleInputChange}
+              error={errors.email}
+            />
+            <PasswordField
+              label='Password'
+              name='password'
+              id='password'
+              value={form.password}
+              onChange={handleInputChange}
+              showPassword={showPassword}
+              handleClickShowPassword={handleClickShowPassword}
+              error={errors.password}
+            />
+            <Button
+              size='medium'
+              fullWidth={true}
+              type='submit'
+              variant='contained'
+              color='primary'
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging In...' : 'Log In'}
+            </Button>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   );
 }

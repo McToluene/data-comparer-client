@@ -3,6 +3,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import InputField from '../../components/InputField/InputField';
 import { useAuth } from '../../AuthContext';
+import Toast from '../../components/Toast/Toast';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -26,6 +27,7 @@ const schema = yup.object().shape({
 function CompanyForm() {
   const { companyInfo, company, hasCompany } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccesful, setIsSuccessful] = useState(false);
   const [form, setForm] = useState({ name: '', users: 0, products: 0, percentage: 0 });
   const [errors, setErrors] = useState({ name: '', users: '', products: '', percentage: '' });
 
@@ -75,6 +77,13 @@ function CompanyForm() {
     }
   };
 
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setIsSuccessful(false);
+  };
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -95,7 +104,9 @@ function CompanyForm() {
       });
 
       const response = await request.json();
-      if (response.data) companyInfo(response.data);
+      if (response.data) {
+        companyInfo(response.data);
+      }
       setIsLoading((isLoading) => !isLoading);
     } catch (error) {
       console.log(error);
@@ -185,6 +196,14 @@ function CompanyForm() {
           </Button>
         </Box>
       </Grid>
+      {isSuccesful ? (
+        <Toast
+          severity='success'
+          open={isSuccesful}
+          message={'Saved successfully'}
+          handleClose={handleClose}
+        />
+      ) : null}
     </Grid>
   );
 }
