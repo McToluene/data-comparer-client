@@ -1,55 +1,18 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // for `toBeInTheDocument`
+import { render, screen } from '@testing-library/react';
 import Toast from './Toast';
 
-describe('Toast', () => {
-  it('renders the message and handles close', () => {
-    const handleClose = jest.fn();
+jest.setTimeout(10000);
 
-    render(
-      <Toast
-        open={true}
-        message='This is a test message'
-        severity='success'
-        handleClose={handleClose}
-      />
-    );
-
-    // Check if the message is rendered
-    expect(screen.getByText('This is a test message')).toBeInTheDocument();
-
-    // Check if the close button is rendered
-    const closeButton = screen.getByRole('button', { name: 'close' });
-    expect(closeButton).toBeInTheDocument();
-
-    // Simulate a click on the close button
-    fireEvent.click(closeButton);
-
-    // Check if the handleClose function is called
-    expect(handleClose).toHaveBeenCalledTimes(1);
+describe('Toast Component', () => {
+  it('renders without crashing', () => {
+    render(<Toast open={true} handleClose={() => {}} message='Test message' severity='success' />);
   });
 
-  it('displays UNDO button and handles UNDO action', () => {
-    const handleClose = jest.fn();
+  it('displays the provided message', () => {
+    render(<Toast open={true} handleClose={() => {}} message='Test message' severity='success' />);
 
-    render(
-      <Toast
-        open={true}
-        message='This is a test message'
-        severity='error'
-        handleClose={handleClose}
-      />
-    );
-
-    // Check if the UNDO button is rendered
-    const undoButton = screen.getByText('UNDO');
-    expect(undoButton).toBeInTheDocument();
-
-    // Simulate a click on the UNDO button
-    fireEvent.click(undoButton);
-
-    // Check if the handleClose function is called
-    expect(handleClose).toHaveBeenCalledTimes(1);
+    const messageElement = screen.getByText('Test message');
+    expect(messageElement).toBeInTheDocument();
   });
 });

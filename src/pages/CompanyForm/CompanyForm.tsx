@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState, useRef } from 'react'; // Import useRef
 import InputField from '../../components/InputField/InputField';
 import { useAuth } from '../../AuthContext';
 import Toast from '../../components/Toast/Toast';
@@ -61,6 +61,12 @@ function CompanyForm() {
     }
   }, [companyInfo, hasCompany]);
 
+  // useEffect(() => {
+  //   if (form.users && !form.products && form.percentage) {
+  //     setForm((prevForm) => ({ ...prevForm, percentage: 0 }));
+  //   }
+  // }, [form.users, form.products, form.percentage]);
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -86,26 +92,27 @@ function CompanyForm() {
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
-    setErrors((prevError) => ({ ...prevError, [name]: '' }));
 
-    if (name === 'users' || name === 'products') {
-      setTimeout(() => {
-        calculatePercentage();
-      }, 0);
-    }
+    setForm((prevForm) => {
+      const updatedForm = {
+        ...prevForm,
+        [name]: value,
+      };
+
+      if (name === 'users' || name === 'products') {
+        updatedForm.percentage = calculatePercentage(updatedForm.users, updatedForm.products);
+      }
+
+      return updatedForm;
+    });
+
+    setErrors((prevError) => ({ ...prevError, [name]: '' }));
   };
 
-  const calculatePercentage = () => {
-    if (form.users > 0 && form.products > 0) {
-      console.log(form.users, form.products);
-      const calculatedPercentage = (form.users / form.products) * 100;
-      setForm((prevForm) => ({ ...prevForm, percentage: calculatedPercentage }));
-    } else {
-      console.log('else');
-      console.log(form.users, form.products);
-      setForm((prevForm) => ({ ...prevForm, percentage: 0 }));
-    }
+  const calculatePercentage = (users: number, products: number) => {
+    if (users > 0 && products > 0) {
+      return (users / products) * 100;
+    } else return 0;
   };
 
   async function createCompany(form: any) {

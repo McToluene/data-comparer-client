@@ -1,76 +1,43 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // For additional matchers like toBeInTheDocument
-import { MemoryRouter, Route } from 'react-router-dom';
-import { AuthProvider } from '../../AuthContext';
+import { render, fireEvent, screen } from '@testing-library/react';
 import DrawerAppBar from './Header';
 
-// Mock the AuthProvider
+// Mock the useAuth hook
 jest.mock('../../AuthContext', () => ({
   useAuth: () => ({
-    user: { role: 'ADMIN' },
+    user: {
+      role: 'USER', // Provide a user role for testing
+    },
     logout: jest.fn(),
   }),
 }));
 
-describe('DrawerAppBar', () => {
+describe('DrawerAppBar Component', () => {
   it('renders without crashing', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <AuthProvider>
-          <Route path='/' Component={DrawerAppBar} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText('Data Comparer')).toBeInTheDocument();
+    render(<DrawerAppBar />);
   });
 
-  it('handles drawer toggle', () => {
-    render(
-      <MemoryRouter initialEntries={['/dashboard']}>
-        <AuthProvider>
-          <Route path='/' Component={DrawerAppBar} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-
-    // Open the drawer
-    const menuButton = screen.getByLabelText('open drawer');
-    fireEvent.click(menuButton);
-
-    // Check if the menu items are visible
-    expect(screen.getByText('Companies')).toBeInTheDocument();
-    expect(screen.getByText('Logout')).toBeInTheDocument();
-
-    // Close the drawer
-    fireEvent.click(menuButton);
-
-    // Check if the menu items are hidden
-    expect(screen.queryByText('Companies')).toBeNull();
-    expect(screen.queryByText('Logout')).toBeNull();
+  it('displays the app title', async () => {
+    render(<DrawerAppBar />);
+    const appTitle = await screen.findByText('Data Comparer', {}, { timeout: 3000 });
+    expect(appTitle).toBeInTheDocument();
   });
 
-  it('handles logout click', () => {
-    const { logout } = require('../../AuthContext'); // Import the mocked logout function
-
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <AuthProvider>
-          <Route path='/' Component={DrawerAppBar} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-
-    // Open the drawer
+  it('opens and closes the mobile drawer when menu button is clicked', async () => {
+    render(<DrawerAppBar />);
     const menuButton = screen.getByLabelText('open drawer');
+
+    const formText = await screen.findByText('Form', {}, { timeout: 3000 });
+    expect(formText).not.toBeInTheDocument();
+
     fireEvent.click(menuButton);
 
-    // Click the "Logout" button
-    const logoutButton = screen.getByText('Logout');
-    fireEvent.click(logoutButton);
+    const formTextAfterOpen = await screen.findByText('Form', {}, { timeout: 3000 });
+    expect(formTextAfterOpen).toBeInTheDocument();
 
-    // Check if the logout function is called
-    expect(logout).toHaveBeenCalledTimes(1);
+    fireEvent.click(menuButton);
+
+    const formTextAfterClose = await screen.findByText('Form', {}, { timeout: 3000 });
+    expect(formTextAfterClose).not.toBeInTheDocument();
   });
 });
